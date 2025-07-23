@@ -1,0 +1,5 @@
+/opt/Dummy-repo/backend/src/main/java/com/example/jewellery/controller/ProductController.java
+/opt/Dummy-repo/backend/src/main/java/com/example/jewellery/repository/ProductRepository.java
+/opt/Dummy-repo/backend/src/main/java/com/example/jewellery/model/Product.java
+/opt/Dummy-repo/backend/src/main/java/com/example/jewellery/service/ProductService.java
+/opt/Dummy-repo/backend/src/main/java/com/example/jewellery/JewelleryApplication.java

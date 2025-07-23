@@ -1,0 +1,5 @@
+com/example/jewellery/repository/ProductRepository.class
+com/example/jewellery/JewelleryApplication.class
+com/example/jewellery/model/Product.class
+com/example/jewellery/controller/ProductController.class
+com/example/jewellery/service/ProductService.class
