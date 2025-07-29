@@ -1,61 +1,41 @@
 pipeline {
     agent any
-    
     tools {
-        jdk 'jdk11'
-        maven 'maven3'
+        jdk 'Java17'
+        maven 'maven-3.9'
     }
-    
-    environment{
-        SCANNER_HOME= tool 'sonar-scanner'
-    }
-
     stages {
-        stage('Git Checkout ') {
+        stage('Git Checkout') {
             steps {
-                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/boobalan22/Docker-Project-JewelBox.git'
+                git branch: 'main', url: 'https://github.com/boobalan22/Docker-Project-JewelBox.git'
             }
         }
-        
+
         stage('Code Compile') {
             steps {
-                    sh "mvn compile"
+                sh "mvn clean package"
             }
         }
-        
-        stage('Run Test Cases') {
+
+        stage('Docker Build') {
             steps {
-                    sh "mvn test"
+                sh "docker build -t webapp ."
+                sh "docker tag webapp boobu/webapp:latest"
             }
         }
-        
-        stage('Sonarqube Analysis') {
+
+        stage('Docker push') {
             steps {
-                    withSonarQubeEnv('sonar-server') {
-                        sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Java-WebApp \
-                        -Dsonar.java.binaries=. \
-                        -Dsonar.projectKey=Java-WebApp '''
-    
+                withDockerRegistry(credentialsId: 'Docker-cred', url: 'https://index.docker.io/v1/') {
+                    sh "docker push boobu/webapp:latest"
                 }
             }
         }
-        
-        stage('Maven Build') {
-            steps {
-                    sh "mvn clean compile"
-            }
-        }
-        
-        stage('Docker Build & Push') {
-            steps {
-                   script {
-                       withDockerRegistry(credentialsId: 'b289dc43-2ede-4bd0-95e8-75ca26100d8d', toolName: 'docker') {
-                            sh "docker build -t webapp ."
-                            sh "docker tag webapp boobu/webapp:latest"
-                            sh "docker push boobu/webapp:latest "
-                        }
-                   } 
-            }
-        }
-        
 
+        stage('Docker Run') {
+            steps {
+                sh "docker run -d -p 8080:8080 boobu/webapp:latest"
+            }
+        }
+    }
+}
