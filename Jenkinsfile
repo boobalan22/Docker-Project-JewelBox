@@ -17,6 +17,18 @@ pipeline {
             }
         }
 
+        stage ('Sonar-Scanner') {
+            steps { 
+                withSonarQubeEnv('MySonar') { 
+            sh '''
+            mvn clean verify sonar:sonar \ 
+            -Dsonar.projectKey=Sonar \ 
+            -Dsonar.projectName=Sonar 
+            ''' 
+               } 
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 sh "docker build -t webapp ."
